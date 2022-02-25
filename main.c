@@ -1,59 +1,92 @@
-#include<stdio.h>
-#include<string.h>
-void showmenu(char[][20],float[]);
-float getmoney();
-void purchase(float,float[],char[][20]);
+// coded by wanz
+
+#include <stdio.h>
+#include <string.h>
+void CalculateFee(int childs_no, int fees[], int discont_available);
+void input();
+void test(int test_array[2]);
+void output(int total_fee, int discount);
 int main()
-{	char drink[5][20]={"mineral water","coca-cola","seven-Up","nescafe","soydrink"};
-	float total,price[5]={1,2.5,2.2,3,1.9};
-	showmenu(drink,price);
-	total=getmoney();
-	purchase(total,price,drink);
-	system("pause");
-	return 0;
+{
+    
+    input();
+
+    return 0;
 }
-void showmenu(char a[][20],float b[])
-{	int i;
-	for(i=0;i<5;i++)
-	{	printf("\t%s \tRM %.2f",a[i],b[i]);
-		printf("\n");
-	}
+
+void input()    {
+    int childs, discont_available;
+    char household[10];
+    
+    
+    
+    // int fees[4] = {0,370,330,200};
+    printf("Welcome to kindergardern\n");
+    printf("how many child: ");
+    scanf("%d", &childs);
+    
+    if (childs > 1)  {
+        discont_available = 1;
+    }
+    printf("\nHousehold income (A or B): ");
+    scanf("%s", household);
+    
+    while(strcmp(household, "A") != 0 && strcmp(household, "B") != 0) {
+       printf("\nInvalid!\nHousehold income (A or B): ");
+     scanf("%s", household); 
+    }
+    
+    if (strcmp(household, "A") == 0) {
+ 
+        int fee[4] = {0,370,330,200};
+        CalculateFee(childs,fee, discont_available);
+    }   else {
+       
+        int fee[4] = {0,350,300,150};
+        CalculateFee(childs,fee, discont_available);
+    }
+    
+    
 }
-float getmoney()
-{	int x;
-	float total=0;
-	do
-	{	printf("enter money(cents) : (-1 to stop) : ");
-		scanf("%d",&x);
-		switch(x)
-		{	case -1: break;
-			case 50:
-			case 20:
-			case 10: total+=(float)x/100;
-					 printf("total amount inserted until now = RM%.2f\n",total);	
-					 break;	
-			default: printf("invalid! enter again\n");
-		}
-	}while(x!=-1);
-	return total;
+void test(int fee[2])   {
+    printf("testing aray: ");
+    printf("%d", fee[1]);
 }
-void purchase(float total,float price[],char drink[][20])
-{	int i;
-	char choice[20];
-	printf("\navailable drinks :\n");
-	for(i=0;i<5;i++)
-	{	if(total>=price[i])
-		{	printf("%s \tRM %.2f",drink[i],price[i]);
-			printf("\n");
-		}
-	}
-	printf("\nwhich one do you like to buy? :\n");
-	printf("your choice : ");
-	fflush(stdin);
-	gets(choice);
-	for(i=0;i<5;i++)
-	{	if(strcmp(drink[i],choice)==0)
-		printf("price = RM %.2f\nbalance = RM%.2f\n",price[i],total-price[i]);
-		
-	}printf("thank you \2\n");
+void CalculateFee(int childs_no, int fee[4], int discount)   {
+    int total_fee = 0;
+    int discont_available = discount;
+    //{0,370,330,200};  income 5000 keatas
+   // {0,350,300,150};  income 5000 kebawah
+     // array income yg akan guna
+     
+    int category;
+   
+    for (int i = 1; i <= childs_no; i++)    {
+        printf("\n\nChild #%d\n========\n", i);
+        
+        printf("Category (1, 2 or 3): ");
+         scanf("%d", &category);
+    
+    
+       while (category != 1 && category != 2 && category != 3)  {
+           printf("Invalid!\nCategory (1,2 or 3): ");
+           scanf("%d", &category);
+       }
+       
+       
+       total_fee = total_fee + fee[category];
+       printf("The monthly fee is : RM%d", fee[category]);
+    
+    }
+    output(total_fee, discont_available);
+}
+
+void output(int total_fee, int discount)   {
+    if (discount != 0) {
+        printf("\nTotal fee is RM%d", total_fee);
+        printf("\nDiscounted fee is RM %.0f", (total_fee - (total_fee * 0.1)));
+    }   else {
+        printf("\nTotal fee is RM%d", total_fee);
+    }
+    printf("\nThank you for using this system.");
 }
